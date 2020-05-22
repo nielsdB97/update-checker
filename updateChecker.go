@@ -19,9 +19,8 @@ const ls50url = "https://assets.kef.com/pdf_doc/ls50w/LS50-Wireless-Firmware-Rel
 
 func main() {
 	dotenvErr := godotenv.Load()
-	if dotenvErr != nil {
-		panic(dotenvErr)
-	}
+	checkErr(dotenvErr)
+
 	fileContent, readErr := ioutil.ReadFile("/tmp/" + ls50FileName)
 
 	if readErr != nil {
@@ -32,16 +31,11 @@ func main() {
 	}
 
 	resp, httpErr := http.Get(ls50url)
+	checkErr(httpErr)
 
-	if httpErr != nil {
-		panic(httpErr)
-	}
 	defer resp.Body.Close()
 	body, readErr := ioutil.ReadAll(resp.Body)
-
-	if readErr != nil {
-		panic(readErr)
-	}
+	checkErr(readErr)
 
 	bodyHash := sha1.New()
 	bodyHash.Write(body)
@@ -56,15 +50,11 @@ func main() {
 
 	fmt.Println("Writing file")
 	writeErr := ioutil.WriteFile("/tmp/"+ls50FileName, bodyHashBytes, 0644)
-
-	if writeErr != nil {
-		panic(writeErr)
-	}
+	checkErr(writeErr)
 
 	chatID, parseErr := strconv.ParseInt(os.Getenv("TG_CHAT_ID"), 10, 64)
-	if parseErr != nil {
-		panic(parseErr)
-	}
+	checkErr(parseErr)
+
 	sendNotification(chatID)
 }
 
@@ -80,4 +70,10 @@ func sendNotification(chatID int64) {
 	msg := tgbotapi.NewMessage(chatID, "An update is available for the KEF LS50 Wireless!")
 
 	bot.Send(msg)
+}
+
+func checkErr(err error) {
+	if err != nil {
+		panic(err)
+	}
 }
