@@ -38,8 +38,10 @@ func main() {
 	bodyHash.Write(body)
 	bodyHashBytes := bodyHash.Sum(nil)
 
+	fmt.Printf("Previous: %x\n", fileContent)
+	fmt.Printf("Incoming: %x\n", bodyHashBytes)
 	if bytes.Equal(fileContent, bodyHashBytes) {
-		fmt.Println("Files match!")
+		fmt.Println("Hashes match!")
 		return
 	}
 
