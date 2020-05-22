@@ -61,6 +61,14 @@ func main() {
 		panic(writeErr)
 	}
 
+	chatID, parseErr := strconv.ParseInt(os.Getenv("TG_CHAT_ID"), 10, 64)
+	if parseErr != nil {
+		panic(parseErr)
+	}
+	sendNotification(chatID)
+}
+
+func sendNotification(chatID int64) {
 	bot, botErr := tgbotapi.NewBotAPI(os.Getenv("TG_API_TOKEN"))
 	if botErr != nil {
 		panic(botErr)
@@ -69,10 +77,6 @@ func main() {
 	u := tgbotapi.NewUpdate(0)
 	u.Timeout = 60
 
-	chatID, parseErr := strconv.ParseInt(os.Getenv("TG_CHAT_ID"), 10, 64)
-	if parseErr != nil {
-		panic(parseErr)
-	}
 	msg := tgbotapi.NewMessage(chatID, "An update is available for the KEF LS50 Wireless!")
 
 	bot.Send(msg)
