@@ -6,4 +6,12 @@
 
 ## Running Docker image
 
-`docker run -it --rm --name update-checker update-checker`
+Make sure to create a `.env` file containing the keys present in the `.env.example` file.
+
+You can run the image directly:
+
+```docker run -it --rm --name update-checker update-checker```
+
+or you can run it by using docker compose:
+
+```docker-compose up```
