@@ -22,10 +22,6 @@ func main() {
 		fmt.Println("File does not exist yet")
 	}
 
-	fileContentHash := sha1.New()
-	fileContentHash.Write(fileContent)
-	fileContentHashBS := fileContentHash.Sum(nil)
-
 	resp, httpErr := http.Get(ls50url)
 
 	if httpErr != nil {
@@ -40,15 +36,15 @@ func main() {
 
 	bodyHash := sha1.New()
 	bodyHash.Write(body)
-	bodyHashBS := bodyHash.Sum(nil)
+	bodyHashBytes := bodyHash.Sum(nil)
 
-	if bytes.Equal(fileContentHashBS, bodyHashBS) {
+	if bytes.Equal(fileContent, bodyHashBytes) {
 		fmt.Println("Files match!")
 		return
 	}
 
 	fmt.Println("Writing file")
-	writeErr := ioutil.WriteFile("/tmp/"+ls50FileName, body, 0644)
+	writeErr := ioutil.WriteFile("/tmp/"+ls50FileName, bodyHashBytes, 0644)
 
 	if writeErr != nil {
 		panic(writeErr)
