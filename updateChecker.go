@@ -5,9 +5,11 @@ import (
 	"net/http"
 )
 
+const ls50FileName = "ls50_release_notes"
+const ls50url = "https://assets.kef.com/pdf_doc/ls50w/LS50-Wireless-Firmware-Release-Note.pdf"
+
 func main() {
-	urlToCheck := "https://assets.kef.com/pdf_doc/ls50w/LS50-Wireless-Firmware-Release-Note.pdf"
-	resp, httpErr := http.Get(urlToCheck)
+	resp, httpErr := http.Get(ls50url)
 
 	if httpErr != nil {
 		panic(httpErr)
@@ -19,7 +21,7 @@ func main() {
 		panic(readErr)
 	}
 
-	writeErr := ioutil.WriteFile("/tmp/ls50_release_notes", body, 0644)
+	writeErr := ioutil.WriteFile("/tmp/"+ls50FileName, body, 0644)
 
 	if writeErr != nil {
 		panic(writeErr)
