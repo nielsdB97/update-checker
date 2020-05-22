@@ -11,16 +11,13 @@ import (
 	"strings"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
-	godotenv "github.com/joho/godotenv"
+	_ "github.com/joho/godotenv/autoload"
 )
 
 const ls50FileName = "ls50_release_notes"
 const ls50url = "https://assets.kef.com/pdf_doc/ls50w/LS50-Wireless-Firmware-Release-Note.pdf"
 
 func main() {
-	dotenvErr := godotenv.Load()
-	checkErr(dotenvErr)
-
 	fileContent, readErr := ioutil.ReadFile("/tmp/" + ls50FileName)
 
 	if readErr != nil {
