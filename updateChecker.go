@@ -18,6 +18,7 @@ func main() {
 		if !strings.Contains(readErr.Error(), "no such file or directory") {
 			panic(readErr)
 		}
+		fmt.Println("File does not exist yet")
 	}
 
 	resp, httpErr := http.Get(ls50url)
@@ -37,6 +38,7 @@ func main() {
 		return
 	}
 
+	fmt.Println("Writing file")
 	writeErr := ioutil.WriteFile("/tmp/"+ls50FileName, body, 0644)
 
 	if writeErr != nil {
