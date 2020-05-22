@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"crypto/sha1"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -21,6 +22,10 @@ func main() {
 		fmt.Println("File does not exist yet")
 	}
 
+	fileContentHash := sha1.New()
+	fileContentHash.Write(fileContent)
+	fileContentHashBS := fileContentHash.Sum(nil)
+
 	resp, httpErr := http.Get(ls50url)
 
 	if httpErr != nil {
@@ -33,7 +38,11 @@ func main() {
 		panic(readErr)
 	}
 
-	if bytes.Equal(fileContent, body) {
+	bodyHash := sha1.New()
+	bodyHash.Write(body)
+	bodyHashBS := bodyHash.Sum(nil)
+
+	if bytes.Equal(fileContentHashBS, bodyHashBS) {
 		fmt.Println("Files match!")
 		return
 	}
