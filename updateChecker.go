@@ -21,11 +21,11 @@ func main() {
 	checkErr(parseURLErr)
 	_, fileName := path.Split(fetchURL.Path)
 
-	fileContent, readErr := ioutil.ReadFile("/tmp/" + fileName)
+	fileContent, readFileErr := ioutil.ReadFile("/tmp/" + fileName)
 
-	if readErr != nil {
-		if !strings.Contains(readErr.Error(), "no such file or directory") {
-			panic(readErr)
+	if readFileErr != nil {
+		if !strings.Contains(readFileErr.Error(), "no such file or directory") {
+			panic(readFileErr)
 		}
 		fmt.Println("File does not exist yet")
 	}
@@ -34,8 +34,8 @@ func main() {
 	checkErr(httpErr)
 
 	defer resp.Body.Close()
-	body, readErr := ioutil.ReadAll(resp.Body)
-	checkErr(readErr)
+	body, readBodyErr := ioutil.ReadAll(resp.Body)
+	checkErr(readBodyErr)
 
 	bodyHash := sha1.New()
 	bodyHash.Write(body)
@@ -55,7 +55,7 @@ func main() {
 	chatID, parseErr := strconv.ParseInt(os.Getenv("TG_CHAT_ID"), 10, 64)
 	checkErr(parseErr)
 
-	if readErr != nil {
+	if readFileErr == nil {
 		fmt.Println("Sending notification")
 		sendNotification(chatID, fetchURL.String())
 	}
