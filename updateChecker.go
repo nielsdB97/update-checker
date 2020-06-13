@@ -55,8 +55,10 @@ func main() {
 	chatID, parseErr := strconv.ParseInt(os.Getenv("TG_CHAT_ID"), 10, 64)
 	checkErr(parseErr)
 
-	fmt.Println("Sending notification")
-	sendNotification(chatID, fetchURL.String())
+	if readErr != nil {
+		fmt.Println("Sending notification")
+		sendNotification(chatID, fetchURL.String())
+	}
 }
 
 func sendNotification(chatID int64, updatedURL string) {
