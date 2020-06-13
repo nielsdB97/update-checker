@@ -16,12 +16,14 @@ import (
 	_ "github.com/joho/godotenv/autoload"
 )
 
+const filePath = "/tmp/"
+
 func main() {
 	fetchURL, parseURLErr := url.Parse(os.Getenv("URL"))
 	checkErr(parseURLErr)
 	_, fileName := path.Split(fetchURL.Path)
 
-	fileContent, readFileErr := ioutil.ReadFile("/tmp/" + fileName)
+	fileContent, readFileErr := ioutil.ReadFile(filePath + fileName)
 
 	if readFileErr != nil {
 		if !strings.Contains(readFileErr.Error(), "no such file or directory") {
@@ -49,7 +51,7 @@ func main() {
 	}
 
 	fmt.Println("Writing file")
-	writeErr := ioutil.WriteFile("/tmp/"+fileName, bodyHashBytes, 0644)
+	writeErr := ioutil.WriteFile(filePath+fileName, bodyHashBytes, 0644)
 	checkErr(writeErr)
 
 	chatID, parseErr := strconv.ParseInt(os.Getenv("TG_CHAT_ID"), 10, 64)
