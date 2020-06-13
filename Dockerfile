@@ -6,6 +6,6 @@ RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o update-checker
 RUN chmod +x ./update-checker
 
 FROM alpine
-RUN apk add --no-cache ca-certificates apache2-utils
+RUN apk update && apk add --no-cache ca-certificates apache2-utils
 COPY --from="builder" /go/src/update-checker .
 CMD ["./update-checker"]
