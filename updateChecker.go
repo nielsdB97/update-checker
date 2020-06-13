@@ -9,27 +9,33 @@ import (
 	"net/url"
 	"os"
 	"path"
+	"path/filepath"
 	"strconv"
-	"strings"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
 	_ "github.com/joho/godotenv/autoload"
 )
 
-const filePath = "/opt/updatechecker/"
+const hashesDir = "/hashes/"
 
 func main() {
 	fetchURL, parseURLErr := url.Parse(os.Getenv("URL"))
 	checkErr(parseURLErr)
 	_, fileName := path.Split(fetchURL.Path)
 
-	fileContent, readFileErr := ioutil.ReadFile(filePath + fileName)
+	ex, exErr := os.Executable()
+	checkErr(exErr)
+	workingDir := filepath.Dir(ex)
 
-	if readFileErr != nil {
-		if !strings.Contains(readFileErr.Error(), "no such file or directory") {
-			panic(readFileErr)
-		}
+	fileContent, readFileErr := ioutil.ReadFile(workingDir + hashesDir + fileName)
+
+	if os.IsNotExist(readFileErr) {
 		fmt.Println("File does not exist yet")
+
+		if _, readHashesDirErr := os.Stat(workingDir + hashesDir); os.IsNotExist(readHashesDirErr) {
+			fmt.Println("Creating hashes directory")
+			os.Mkdir(workingDir+hashesDir, os.ModePerm)
+		}
 	}
 
 	resp, httpErr := http.Get(fetchURL.String())
@@ -51,7 +57,7 @@ func main() {
 	}
 
 	fmt.Println("Writing file")
-	writeErr := ioutil.WriteFile(filePath+fileName, bodyHashBytes, 0644)
+	writeErr := ioutil.WriteFile(workingDir+hashesDir+fileName, bodyHashBytes, 0644)
 	checkErr(writeErr)
 
 	chatID, parseErr := strconv.ParseInt(os.Getenv("TG_CHAT_ID"), 10, 64)
