@@ -16,7 +16,7 @@ import (
 	_ "github.com/joho/godotenv/autoload"
 )
 
-const filePath = "/tmp/"
+const filePath = "/opt/updatechecker/"
 
 func main() {
 	fetchURL, parseURLErr := url.Parse(os.Getenv("URL"))

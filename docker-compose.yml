@@ -4,3 +4,8 @@ services:
     build: '.'
     env_file:
       - ./.env
+    volumes:
+      - 'filehashes:/opt/updatechecker'
+
+volumes:
+  filehashes:
