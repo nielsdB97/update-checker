@@ -1,2 +1,2 @@
 #!/bin/sh
-/opt/updatechecker/update-checker
+/opt/updatechecker/update-checker > /dev/stdout
