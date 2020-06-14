@@ -9,4 +9,5 @@ FROM alpine
 RUN apk update && apk add --no-cache ca-certificates apache2-utils
 COPY --from="builder" /go/src/update-checker /opt/updatechecker/update-checker
 WORKDIR /opt/updatechecker
-CMD ["./update-checker"]
+COPY cron-run-update-checker /etc/periodic/hourly
+ENTRYPOINT ["crond", "-l2", "-f"]
