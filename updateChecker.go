@@ -15,6 +15,7 @@ import (
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
 	_ "github.com/joho/godotenv/autoload"
+	"github.com/microcosm-cc/bluemonday"
 )
 
 const hashesDir = "/hashes/"
@@ -55,8 +56,11 @@ func main() {
 	body, readBodyErr := ioutil.ReadAll(resp.Body)
 	checkErr(readBodyErr)
 
+	p := bluemonday.UGCPolicy()
+	sanitizedBody := p.Sanitize(string(body))
+
 	bodyHash := sha1.New()
-	bodyHash.Write(body)
+	bodyHash.Write([]byte(sanitizedBody))
 	bodyHashBytes := bodyHash.Sum(nil)
 
 	fmt.Printf("Previous: %x\n", fileContent)
