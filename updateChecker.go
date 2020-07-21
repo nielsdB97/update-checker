@@ -26,15 +26,16 @@ func main() {
 	ex, exErr := os.Executable()
 	checkErr(exErr)
 	workingDir := filepath.Dir(ex)
+	hashesPath := workingDir + hashesDir
 
-	fileContent, readFileErr := ioutil.ReadFile(workingDir + hashesDir + fileName)
+	fileContent, readFileErr := ioutil.ReadFile(hashesPath + fileName)
 
 	if os.IsNotExist(readFileErr) {
 		fmt.Println("File does not exist yet")
 
-		if _, readHashesDirErr := os.Stat(workingDir + hashesDir); os.IsNotExist(readHashesDirErr) {
+		if _, readHashesDirErr := os.Stat(hashesPath); os.IsNotExist(readHashesDirErr) {
 			fmt.Println("Creating hashes directory")
-			os.Mkdir(workingDir+hashesDir, os.ModePerm)
+			os.Mkdir(hashesPath, os.ModePerm)
 		}
 	}
 
