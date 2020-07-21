@@ -11,6 +11,7 @@ import (
 	"path"
 	"path/filepath"
 	"strconv"
+	"strings"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
 	_ "github.com/joho/godotenv/autoload"
@@ -26,7 +27,15 @@ func main() {
 	ex, exErr := os.Executable()
 	checkErr(exErr)
 	workingDir := filepath.Dir(ex)
+
 	hashesPath := workingDir + hashesDir
+	if len(os.Args) > 1 {
+		optionalFolderArg := os.Args[1]
+		hashesPath = optionalFolderArg
+		if !strings.HasSuffix(optionalFolderArg, "/") {
+			hashesPath = hashesPath + "/"
+		}
+	}
 
 	fileContent, readFileErr := ioutil.ReadFile(hashesPath + fileName)
 
@@ -57,8 +66,8 @@ func main() {
 		return
 	}
 
-	fmt.Println("Writing file")
-	writeErr := ioutil.WriteFile(workingDir+hashesDir+fileName, bodyHashBytes, 0644)
+	fmt.Printf("Writing file to %s\n", hashesPath+fileName)
+	writeErr := ioutil.WriteFile(hashesPath+fileName, bodyHashBytes, 0644)
 	checkErr(writeErr)
 
 	chatID, parseErr := strconv.ParseInt(os.Getenv("TG_CHAT_ID"), 10, 64)
