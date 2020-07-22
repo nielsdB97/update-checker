@@ -1,6 +1,6 @@
 FROM golang:1.14 AS builder
-COPY . src
-WORKDIR src
+WORKDIR /go/src/update-checker
+COPY . .
 RUN go get -d -v ./...
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o update-checker
 RUN chmod +x ./update-checker
