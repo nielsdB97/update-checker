@@ -25,6 +25,10 @@ func main() {
 	checkErr(parseURLErr)
 	_, fileName := path.Split(fetchURL.Path)
 
+	if len(fileName) < 1 {
+		fileName = strings.ReplaceAll(fetchURL.Path, "/", "-")
+	}
+
 	ex, exErr := os.Executable()
 	checkErr(exErr)
 	workingDir := filepath.Dir(ex)
