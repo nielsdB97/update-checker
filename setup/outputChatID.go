@@ -3,8 +3,9 @@ package main
 import (
 	"log"
 	"os"
+	"strconv"
 
-	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
+	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	_ "github.com/joho/godotenv/autoload"
 )
 
@@ -21,17 +22,14 @@ func main() {
 	u := tgbotapi.NewUpdate(0)
 	u.Timeout = 60
 
-	updates, updatesErr := bot.GetUpdatesChan(u)
-	if updatesErr != nil {
-		panic(updatesErr)
-	}
+	updates := bot.GetUpdatesChan(u)
 
 	for update := range updates {
 		if update.Message == nil {
 			continue
 		}
 
-		log.Printf("[%s] (chatID: %s) %s", update.Message.From.UserName, string(update.Message.Chat.ID), update.Message.Text)
+		log.Printf("[%s] (chatID: %s) %s", update.Message.From.UserName, strconv.FormatInt(update.Message.Chat.ID, 10), update.Message.Text)
 
 		msg := tgbotapi.NewMessage(update.Message.Chat.ID, "Message received!")
 		msg.ReplyToMessageID = update.Message.MessageID
